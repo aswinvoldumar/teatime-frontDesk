@@ -1,8 +1,7 @@
 ---
 import Badge from '../shared/Badge.astro';
-import Button from '../shared/Button.astro';
 import Icon from '../shared/Icon.astro';
-import { Printer } from 'lucide-static';
+import { Clock } from 'lucide-static';
 import type { Order } from '../../types';
 import {
   formatRelativeTime,
@@ -23,8 +22,7 @@ const showPriority = order.priority === 'high' || order.priority === 'urgent';
 
 <article
   class:list={[
-    'group bg-card border border-border rounded-xl p-3 shadow-[var(--shadow-card)]',
-    'flex flex-col h-full transition-all duration-200 hover:border-primary/25 hover:shadow-[var(--shadow-card-hover)]',
+    'panel-card p-3.5 flex flex-col h-full transition-all duration-200 hover:shadow-[var(--shadow-card-hover)]',
     order.status === 'new' && 'order-card-new',
   ]}
   data-order-card
@@ -37,33 +35,27 @@ const showPriority = order.priority === 'high' || order.priority === 'urgent';
     ...order.items.map((i) => i.name),
   ].join(' ').toLowerCase()}
 >
-  <div class="flex items-start justify-between gap-2 mb-2">
-    <div class="min-w-0">
-      <div class="flex items-center gap-1.5 flex-wrap">
-        <span class="text-body font-bold text-text">{order.id}</span>
-        <span class="text-[11px] text-muted font-medium uppercase tracking-wide">
-          Table {order.tableNumber}
-        </span>
-      </div>
-      <p class="text-body font-semibold text-text mt-0.5 truncate">{order.customerName}</p>
-    </div>
-    <div class="flex flex-col items-end gap-1 shrink-0">
-      {showPriority && (
-        <Badge color={priorityColors[order.priority]} variant="priority" class="!text-[10px] !py-0 !px-1.5">
-          {order.priority.charAt(0).toUpperCase() + order.priority.slice(1)}
-        </Badge>
-      )}
-      <Badge color={statusColors[order.status]} variant="status" class="!text-[10px] !py-0 !px-1.5">
-        {orderStatusLabels[order.status]}
+  <!-- Header: ID + inline badges -->
+  <div class="flex items-center flex-wrap gap-1.5 mb-2">
+    <span class="text-sm font-bold text-text">{order.id}</span>
+    <span class="badge-table">Table {order.tableNumber}</span>
+    {showPriority && (
+      <Badge color={priorityColors[order.priority]} variant="priority" class="!text-[10px] !py-0 !px-1.5 !rounded-md">
+        {order.priority.charAt(0).toUpperCase() + order.priority.slice(1)}
       </Badge>
-    </div>
+    )}
+    <Badge color={statusColors[order.status]} variant="status" class="!text-[10px] !py-0 !px-1.5 !rounded-md">
+      {orderStatusLabels[order.status]}
+    </Badge>
   </div>
 
-  <ul class="flex-1 space-y-0.5 mb-2.5" aria-label="Order items">
+  <p class="text-sm font-semibold text-text mb-2">{order.customerName}</p>
+
+  <ul class="flex-1 space-y-0.5 mb-3" aria-label="Order items">
     {order.items.map((item) => (
-      <li class="flex items-center gap-1.5 text-caption text-muted leading-snug">
-        <span class="w-1 h-1 rounded-full bg-muted/60 shrink-0" />
-        <span class="truncate">
+      <li class="flex items-start gap-1.5 text-xs text-muted leading-snug">
+        <span class="mt-1.5 w-1 h-1 rounded-full bg-muted/50 shrink-0" />
+        <span>
           {item.quantity > 1 && <span class="font-medium text-text">{item.quantity}× </span>}
           {item.name}
         </span>
@@ -71,27 +63,20 @@ const showPriority = order.priority === 'high' || order.priority === 'urgent';
     ))}
   </ul>
 
-  <div class="flex items-center justify-between pt-2 border-t border-border mt-auto gap-2">
-    <time class="text-[11px] text-muted shrink-0" datetime={order.createdAt.toISOString()}>
-      {formatRelativeTime(order.createdAt)}
-    </time>
-    <div class="flex items-center gap-1 shrink-0">
-      <button
-        type="button"
-        aria-label={`Print order ${order.id}`}
-        class="w-7 h-7 rounded-md flex items-center justify-center
-               border border-border hover:bg-background dark:hover:bg-surface transition-colors"
-      >
-        <Icon svg={Printer} class="w-3 h-3 text-muted" />
-      </button>
-      <Button
-        size="sm"
-        variant="primary"
-        class:list={[actionButtonColors[order.status], '!px-2.5 !py-1 !text-caption']}
-        ariaLabel={`${orderActionLabels[order.status]} order ${order.id}`}
-      >
-        {orderActionLabels[order.status]}
-      </Button>
+  <div class="flex items-center justify-between pt-2.5 border-t border-border mt-auto gap-2">
+    <div class="flex items-center gap-1 text-[11px] text-muted">
+      <Icon svg={Clock} class="w-3 h-3 shrink-0" />
+      <time datetime={order.createdAt.toISOString()}>{formatRelativeTime(order.createdAt)}</time>
     </div>
+    <button
+      type="button"
+      class:list={[
+        'btn-primary px-3 py-1.5 text-xs font-semibold',
+        actionButtonColors[order.status],
+      ]}
+      aria-label={`${orderActionLabels[order.status]} order ${order.id}`}
+    >
+      {orderActionLabels[order.status]}
+    </button>
   </div>
 </article>

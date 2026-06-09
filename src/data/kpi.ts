@@ -7,7 +7,7 @@ export const kpiData: KPI[] = [
     value: 32,
     description: '8 awaiting kitchen',
     trend: 12.5,
-    trendLabel: 'vs yesterday',
+    trendLabel: 'vs last hour',
     icon: 'ClipboardList',
   },
   {

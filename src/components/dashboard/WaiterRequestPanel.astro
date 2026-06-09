@@ -12,23 +12,19 @@ const requestTabs = [
 
 <aside
   aria-label="Waiter requests"
-  class="waiter-panel lg:sticky lg:top-[4.25rem] lg:h-[calc(100vh-5.25rem)]
-         bg-card border border-border rounded-xl
-         shadow-[var(--shadow-card)] flex flex-col overflow-hidden min-h-[320px]"
+  class="panel-card lg:sticky lg:top-[4.25rem] lg:h-[calc(100vh-5.25rem)]
+         flex flex-col overflow-hidden min-h-[360px]"
   data-requests-panel
 >
-  <div class="flex items-center justify-between px-3.5 py-3 border-b border-border shrink-0">
+  <div class="flex items-center justify-between px-4 py-3.5 border-b border-border shrink-0">
     <div class="flex items-center gap-2 min-w-0">
-      <h2 class="text-body font-semibold text-text truncate">Waiter Requests</h2>
-      <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-[11px] font-semibold
-                   bg-primary/10 text-primary dark:bg-primary/15 shrink-0">
+      <h2 class="text-sm font-semibold text-text">Waiter Requests</h2>
+      <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold
+                   bg-primary/10 text-primary shrink-0">
         {pendingRequests.length} pending
       </span>
     </div>
-    <a
-      href="/requests"
-      class="text-[11px] text-primary hover:text-primary-hover font-medium transition-colors shrink-0"
-    >
+    <a href="/requests" class="text-xs text-primary hover:text-primary-hover font-medium shrink-0">
       View all
     </a>
   </div>
@@ -36,7 +32,7 @@ const requestTabs = [
   <div
     role="tablist"
     aria-label="Filter requests"
-    class="flex gap-1 px-3.5 py-2 border-b border-border shrink-0 overflow-x-auto scrollbar-thin"
+    class="flex gap-1.5 px-4 py-2.5 border-b border-border shrink-0 overflow-x-auto scrollbar-thin"
     data-request-tabs
   >
     {requestTabs.map((tab) => (
@@ -46,10 +42,8 @@ const requestTabs = [
         aria-selected={tab.id === 'all' ? 'true' : 'false'}
         data-request-tab={tab.id}
         class:list={[
-          'px-2.5 py-1 rounded-full text-[11px] font-medium whitespace-nowrap transition-all duration-200',
-          tab.id === 'all'
-            ? 'bg-primary text-white shadow-sm'
-            : 'text-muted hover:text-text hover:bg-background dark:hover:bg-surface',
+          'request-tab-pill',
+          tab.id === 'all' && 'request-tab-pill-active',
         ]}
       >
         {tab.label}
@@ -57,20 +51,14 @@ const requestTabs = [
     ))}
   </div>
 
-  <div
-    class="flex-1 overflow-y-auto scrollbar-thin px-2.5 py-2 space-y-1.5 min-h-0"
-    data-requests-list
-  >
+  <div class="flex-1 overflow-y-auto scrollbar-thin px-3 py-2.5 space-y-2 min-h-0" data-requests-list>
     {waiterRequests.map((request) => (
       <WaiterRequestCard request={request} />
     ))}
   </div>
 
   <div data-requests-empty class="hidden p-4">
-    <EmptyState
-      title="No requests"
-      description="All waiter requests have been handled."
-    />
+    <EmptyState title="No requests" description="All waiter requests have been handled." />
   </div>
 </aside>
 
@@ -88,7 +76,6 @@ const requestTabs = [
 
     function filterRequests() {
       let visible = 0;
-
       cards.forEach((card) => {
         const status = card.dataset.status ?? '';
         const matches =
@@ -109,12 +96,8 @@ const requestTabs = [
       tab.addEventListener('click', () => {
         activeTab = tab.dataset.requestTab ?? 'all';
         tabs.forEach((t) => {
-          const isActive = t.dataset.requestTab === activeTab;
-          t.setAttribute('aria-selected', String(isActive));
-          t.classList.toggle('bg-primary', isActive);
-          t.classList.toggle('text-white', isActive);
-          t.classList.toggle('shadow-sm', isActive);
-          t.classList.toggle('text-muted', !isActive);
+          t.classList.toggle('request-tab-pill-active', t.dataset.requestTab === activeTab);
+          t.setAttribute('aria-selected', String(t.dataset.requestTab === activeTab));
         });
         filterRequests();
       });

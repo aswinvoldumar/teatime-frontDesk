@@ -8,16 +8,15 @@ interface Props {
 const { variant = 'default', color, class: className = '' } = Astro.props;
 
 const variants = {
-  default: 'bg-background text-muted border border-border',
-  status: color ?? 'bg-background text-muted border border-border',
-  priority: color ?? 'bg-background text-muted border border-border',
+  default: 'bg-slate-50 text-slate-600 border-slate-200 dark:bg-surface dark:text-muted dark:border-border',
+  status: color ?? 'bg-slate-50 text-slate-600 border-slate-200',
+  priority: color ?? 'bg-slate-50 text-slate-600 border-slate-200',
 };
 ---
 
 <span
   class:list={[
-    'inline-flex items-center px-2 py-0.5 rounded-md text-caption font-medium',
-    'border transition-colors duration-200',
+    'inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-semibold border',
     variants[variant],
     className,
   ]}
