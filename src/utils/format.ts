@@ -67,17 +67,17 @@ export const requestTypeIcons: Record<string, string> = {
 };
 
 export const priorityColors: Record<string, string> = {
-  low: 'bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400',
-  normal: 'bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-400',
-  high: 'bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-400',
-  urgent: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
+  low: 'bg-zinc-100 text-zinc-600 dark:bg-zinc-800/80 dark:text-zinc-400',
+  normal: 'bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400',
+  high: 'bg-red-50 text-red-700 dark:bg-red-500/15 dark:text-red-400',
+  urgent: 'bg-red-100 text-red-800 dark:bg-red-500/20 dark:text-red-300',
 };
 
 export const statusColors: Record<string, string> = {
-  new: 'bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-950 dark:text-orange-400 dark:border-orange-900',
-  preparing: 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-400 dark:border-amber-900',
-  ready: 'bg-green-50 text-green-700 border-green-200 dark:bg-green-950 dark:text-green-400 dark:border-green-900',
-  served: 'bg-zinc-100 text-zinc-600 border-zinc-200 dark:bg-zinc-800 dark:text-zinc-400 dark:border-zinc-700',
+  new: 'bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-500/15 dark:text-orange-400 dark:border-orange-500/30',
+  preparing: 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-500/15 dark:text-amber-400 dark:border-amber-500/30',
+  ready: 'bg-green-50 text-green-700 border-green-200 dark:bg-emerald-500/15 dark:text-emerald-400 dark:border-emerald-500/30',
+  served: 'bg-zinc-100 text-zinc-600 border-zinc-200 dark:bg-zinc-800/80 dark:text-zinc-400 dark:border-zinc-700',
 };
 
 export const actionButtonColors: Record<string, string> = {

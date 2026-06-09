@@ -77,7 +77,7 @@ const { order } = Astro.props;
         {formatRelativeTime(order.createdAt)}
       </time>
       {order.kitchenLabel && (
-        <span class="text-caption px-1.5 py-0.5 rounded bg-background border border-border text-muted">
+        <span class="text-caption px-1.5 py-0.5 rounded bg-background border border-border text-muted dark:bg-surface">
           {order.kitchenLabel}
         </span>
       )}
@@ -88,7 +88,7 @@ const { order } = Astro.props;
         type="button"
         aria-label={`Print order ${order.id}`}
         class="w-8 h-8 rounded-lg flex items-center justify-center
-               border border-border hover:bg-background transition-colors duration-200"
+               border border-border hover:bg-background dark:hover:bg-surface transition-colors duration-200"
       >
         <Icon svg={Printer} class="w-3.5 h-3.5 text-muted" />
       </button>
