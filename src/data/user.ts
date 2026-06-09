@@ -8,5 +8,5 @@ export const currentUser = {
   name: 'John Doe',
   role: 'Manager',
   avatar: '',
-  initials: 'AM',
+  initials: 'JD',
 };
