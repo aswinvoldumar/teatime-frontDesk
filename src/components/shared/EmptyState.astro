@@ -1,0 +1,25 @@
+---
+import Icon from './Icon.astro';
+import { Inbox } from 'lucide-static';
+
+interface Props {
+  title: string;
+  description?: string;
+  class?: string;
+}
+
+const { title, description = 'Nothing to show here yet.', class: className = '' } = Astro.props;
+---
+
+<div class:list={['flex flex-col items-center justify-center py-16 px-6 text-center', className]}>
+  <div class="w-12 h-12 rounded-xl bg-background border border-border flex items-center justify-center mb-4">
+    <Icon svg={Inbox} class="w-6 h-6 text-muted" />
+  </div>
+  <h3 class="text-body font-semibold text-text mb-1">{title}</h3>
+  <p class="text-caption text-muted max-w-xs">{description}</p>
+  {Astro.slots.has('action') && (
+    <div class="mt-4">
+      <slot name="action" />
+    </div>
+  )}
+</div>

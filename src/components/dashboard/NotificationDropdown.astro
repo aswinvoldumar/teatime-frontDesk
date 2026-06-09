@@ -1,0 +1,141 @@
+---
+import Icon from '../shared/Icon.astro';
+import { Bell, Package, AlertCircle } from 'lucide-static';
+import { notifications } from '../../data/notifications';
+import { formatRelativeTime } from '../../utils/format';
+
+const unreadCount = notifications.filter((n) => !n.read).length;
+
+const typeIcons: Record<string, string> = {
+  order: Package,
+  request: Bell,
+  system: AlertCircle,
+};
+---
+
+<div class="relative" data-notification-dropdown>
+  <button
+    type="button"
+    id="notification-trigger"
+    aria-label={`Notifications, ${unreadCount} unread`}
+    aria-expanded="false"
+    aria-haspopup="true"
+    class="relative w-9 h-9 rounded-lg flex items-center justify-center
+           bg-background border border-border
+           hover:bg-surface transition-all duration-200
+           focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+  >
+    <Icon svg={Bell} class="w-4 h-4 text-muted" />
+    {unreadCount > 0 && (
+      <span class="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 flex items-center justify-center
+                   bg-red-500 text-white text-[10px] font-bold rounded-full leading-none">
+        {unreadCount}
+      </span>
+    )}
+  </button>
+
+  <div
+    id="notification-panel"
+    role="menu"
+    aria-labelledby="notification-trigger"
+    class="hidden absolute right-0 top-full mt-2 w-80 sm:w-96
+           bg-card border border-border rounded-[var(--radius-card)]
+           shadow-[var(--shadow-premium)] z-50
+           animate-[slide-down_0.2s_ease-out]"
+  >
+    <div class="flex items-center justify-between px-4 py-3 border-b border-border">
+      <h3 class="text-body font-semibold text-text">Notifications</h3>
+      <button
+        type="button"
+        id="mark-all-read"
+        class="text-caption text-primary hover:text-primary-hover font-medium transition-colors"
+      >
+        Mark all read
+      </button>
+    </div>
+
+    <div class="max-h-80 overflow-y-auto scrollbar-thin">
+      {notifications.map((notification) => (
+        <div
+          class:list={[
+            'flex gap-3 px-4 py-3 border-b border-border last:border-0 transition-colors hover:bg-background',
+            !notification.read && 'bg-primary/5',
+          ]}
+          role="menuitem"
+        >
+          <div class="w-8 h-8 rounded-lg bg-background border border-border flex items-center justify-center shrink-0 mt-0.5">
+            <Icon svg={typeIcons[notification.type]} class="w-4 h-4 text-primary" />
+          </div>
+          <div class="flex-1 min-w-0">
+            <p class="text-body font-medium text-text truncate">{notification.title}</p>
+            <p class="text-caption text-muted line-clamp-2">{notification.message}</p>
+            <p class="text-caption text-muted mt-1">{formatRelativeTime(notification.time)}</p>
+          </div>
+          {!notification.read && (
+            <span class="w-2 h-2 rounded-full bg-primary shrink-0 mt-2" aria-label="Unread" />
+          )}
+        </div>
+      ))}
+    </div>
+
+    <div class="px-4 py-2.5 border-t border-border">
+      <button
+        type="button"
+        class="w-full text-center text-caption text-primary hover:text-primary-hover font-medium py-1 transition-colors"
+      >
+        View all notifications
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function initNotifications() {
+    const trigger = document.getElementById('notification-trigger');
+    const panel = document.getElementById('notification-panel');
+    const markAll = document.getElementById('mark-all-read');
+    if (!trigger || !panel) return;
+
+    function close() {
+      panel!.classList.add('hidden');
+      trigger!.setAttribute('aria-expanded', 'false');
+    }
+
+    function toggle() {
+      const isOpen = !panel!.classList.contains('hidden');
+      if (isOpen) {
+        close();
+      } else {
+        panel!.classList.remove('hidden');
+        trigger!.setAttribute('aria-expanded', 'true');
+      }
+    }
+
+    trigger.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggle();
+    });
+
+    markAll?.addEventListener('click', () => {
+      panel!.querySelectorAll('[aria-label="Unread"]').forEach((el) => el.remove());
+      panel!.querySelectorAll('.bg-primary\\/5').forEach((el) => {
+        el.classList.remove('bg-primary/5');
+      });
+      const badge = trigger!.querySelector('span');
+      badge?.remove();
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!panel!.contains(e.target as Node) && !trigger!.contains(e.target as Node)) {
+        close();
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') close();
+    });
+  }
+
+  initNotifications();
+  document.addEventListener('astro:page-load', initNotifications);
+</script>

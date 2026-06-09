@@ -1,0 +1,76 @@
+---
+import Badge from '../shared/Badge.astro';
+import Button from '../shared/Button.astro';
+import Icon from '../shared/Icon.astro';
+import * as LucideIcons from 'lucide-static';
+import type { WaiterRequest } from '../../types';
+import {
+  formatRelativeTime,
+  requestTypeLabels,
+  requestTypeIcons,
+  priorityColors,
+} from '../../utils/format';
+
+interface Props {
+  request: WaiterRequest;
+}
+
+const { request } = Astro.props;
+const iconSvg = (LucideIcons as Record<string, string>)[requestTypeIcons[request.type]] ?? LucideIcons.Bell;
+const isActive = request.status === 'active';
+---
+
+<article
+  class:list={[
+    'flex gap-3 p-3 rounded-xl border transition-all duration-200',
+    isActive
+      ? 'bg-primary/5 border-primary/20 hover:bg-primary/10'
+      : 'bg-card border-border hover:bg-background',
+  ]}
+  data-request-card
+  data-status={request.status}
+  data-type={request.type}
+>
+  <div class:list={[
+    'w-9 h-9 rounded-lg flex items-center justify-center shrink-0',
+    isActive ? 'bg-primary/15' : 'bg-background border border-border',
+  ]}>
+    <Icon svg={iconSvg} class:list={['w-4 h-4', isActive ? 'text-primary' : 'text-muted']} />
+  </div>
+
+  <div class="flex-1 min-w-0">
+    <div class="flex items-center justify-between gap-2 mb-0.5">
+      <span class="text-caption font-medium text-muted">Table {request.tableNumber}</span>
+      {request.priority !== 'normal' && (
+        <Badge color={priorityColors[request.priority]} variant="priority" class="!text-[10px] !py-0">
+          {request.priority}
+        </Badge>
+      )}
+    </div>
+    <p class="text-body font-semibold text-text">{requestTypeLabels[request.type]}</p>
+    <p class="text-caption text-muted mt-0.5">
+      Requested {formatRelativeTime(request.createdAt)}
+    </p>
+    {request.assignedTo && (
+      <p class="text-caption text-primary mt-1">Assigned to {request.assignedTo}</p>
+    )}
+  </div>
+
+  <div class="flex flex-col gap-1.5 shrink-0 self-center">
+    {isActive && (
+      <>
+        <Button size="sm" variant="primary" ariaLabel={`Acknowledge request for table ${request.tableNumber}`}>
+          Ack
+        </Button>
+        <Button size="sm" variant="secondary" ariaLabel={`Assign request for table ${request.tableNumber}`}>
+          Assign
+        </Button>
+      </>
+    )}
+    {request.status === 'assigned' && (
+      <Button size="sm" variant="success" ariaLabel={`Complete request for table ${request.tableNumber}`}>
+        Done
+      </Button>
+    )}
+  </div>
+</article>

@@ -1,0 +1,17 @@
+---
+interface Props {
+  svg: string;
+  class?: string;
+  label?: string;
+}
+
+const { svg, class: className = 'w-4 h-4', label } = Astro.props;
+const sized = svg.replace('<svg', `<svg class="${className}" aria-hidden="${label ? 'false' : 'true'}"`);
+---
+
+<span
+  class="inline-flex shrink-0 items-center justify-center"
+  set:html={sized}
+  role={label ? 'img' : undefined}
+  aria-label={label}
+/>

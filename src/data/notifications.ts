@@ -1,0 +1,60 @@
+import type { Notification } from '../types';
+
+export const notifications: Notification[] = [
+  {
+    id: 'n1',
+    title: 'New Order #1048',
+    message: 'Table 12 — Liam Carter placed a new order',
+    time: new Date(Date.now() - 2 * 60 * 1000),
+    read: false,
+    type: 'order',
+  },
+  {
+    id: 'n2',
+    title: 'Waiter Request',
+    message: 'Table 8 — Bill request (High priority)',
+    time: new Date(Date.now() - 5 * 60 * 1000),
+    read: false,
+    type: 'request',
+  },
+  {
+    id: 'n3',
+    title: 'Order Ready',
+    message: 'Order #1042 for Table 8 is ready to serve',
+    time: new Date(Date.now() - 8 * 60 * 1000),
+    read: false,
+    type: 'order',
+  },
+  {
+    id: 'n4',
+    title: 'Kitchen Alert',
+    message: 'Grill station running 15 min behind',
+    time: new Date(Date.now() - 15 * 60 * 1000),
+    read: true,
+    type: 'system',
+  },
+  {
+    id: 'n5',
+    title: 'New Order #1047',
+    message: 'Table 3 — Emma Wilson, 4 items',
+    time: new Date(Date.now() - 20 * 60 * 1000),
+    read: true,
+    type: 'order',
+  },
+  {
+    id: 'n6',
+    title: 'Special Request',
+    message: 'Table 15 — Allergy alert: shellfish',
+    time: new Date(Date.now() - 25 * 60 * 1000),
+    read: false,
+    type: 'request',
+  },
+  {
+    id: 'n7',
+    title: 'Table Turnover',
+    message: 'Table 6 cleared and ready for seating',
+    time: new Date(Date.now() - 30 * 60 * 1000),
+    read: true,
+    type: 'system',
+  },
+];

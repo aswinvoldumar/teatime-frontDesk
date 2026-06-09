@@ -1,0 +1,19 @@
+---
+interface Props {
+  class?: string;
+  lines?: number;
+}
+
+const { class: className = '', lines = 3 } = Astro.props;
+---
+
+<div class:list={['animate-pulse space-y-3', className]} aria-hidden="true">
+  {Array.from({ length: lines }).map((_, i) => (
+    <div
+      class="h-4 rounded-md skeleton-shimmer"
+      style={`width: ${100 - i * 15}%`}
+    />
+  ))}
+</div>
+
+<div class="sr-only" role="status" aria-live="polite">Loading content...</div>

@@ -1,0 +1,77 @@
+---
+import DashboardLayout from '../layouts/DashboardLayout.astro';
+import RequestCard from '../components/dashboard/RequestCard.astro';
+import { waiterRequests } from '../data/requests';
+---
+
+<DashboardLayout title="Requests" currentPath="/requests">
+  <div class="mb-6 lg:mb-8">
+    <h1 class="text-dashboard-title font-bold text-text tracking-tight">Waiter Requests</h1>
+    <p class="text-body text-muted mt-1">Manage all service requests across the floor</p>
+  </div>
+
+  <div
+    role="tablist"
+    aria-label="Filter requests"
+    class="flex gap-1 p-1 bg-background border border-border rounded-xl mb-6 w-fit overflow-x-auto"
+    data-request-tabs-full
+  >
+    {['all', 'active', 'assigned', 'completed'].map((tab) => (
+      <button
+        type="button"
+        role="tab"
+        aria-selected={tab === 'all' ? 'true' : 'false'}
+        data-request-tab={tab}
+        class:list={[
+          'px-4 py-2 rounded-lg text-body font-medium whitespace-nowrap transition-all duration-200',
+          tab === 'all'
+            ? 'bg-card text-text shadow-sm border border-border'
+            : 'text-muted hover:text-text',
+        ]}
+      >
+        {tab.charAt(0).toUpperCase() + tab.slice(1)}
+      </button>
+    ))}
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3" data-requests-grid>
+    {waiterRequests.map((request) => (
+      <RequestCard request={request} />
+    ))}
+  </div>
+</DashboardLayout>
+
+<script>
+  function initFullRequestFilters() {
+    const tabs = document.querySelectorAll<HTMLButtonElement>('[data-request-tabs-full] [data-request-tab]');
+    const cards = document.querySelectorAll<HTMLElement>('[data-requests-grid] [data-request-card]');
+    let activeTab = 'all';
+
+    function filter() {
+      cards.forEach((card) => {
+        const status = card.dataset.status ?? '';
+        card.style.display = activeTab === 'all' || status === activeTab ? '' : 'none';
+      });
+    }
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        activeTab = tab.dataset.requestTab ?? 'all';
+        tabs.forEach((t) => {
+          const isActive = t.dataset.requestTab === activeTab;
+          t.setAttribute('aria-selected', String(isActive));
+          t.classList.toggle('bg-card', isActive);
+          t.classList.toggle('text-text', isActive);
+          t.classList.toggle('shadow-sm', isActive);
+          t.classList.toggle('border', isActive);
+          t.classList.toggle('border-border', isActive);
+          t.classList.toggle('text-muted', !isActive);
+        });
+        filter();
+      });
+    });
+  }
+
+  initFullRequestFilters();
+  document.addEventListener('astro:page-load', initFullRequestFilters);
+</script>

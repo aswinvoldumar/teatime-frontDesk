@@ -1,0 +1,27 @@
+---
+interface Props {
+  class?: string;
+  padding?: 'sm' | 'md' | 'lg';
+  hover?: boolean;
+}
+
+const { class: className = '', padding = 'md', hover = false } = Astro.props;
+
+const paddings = {
+  sm: 'p-3',
+  md: 'p-4',
+  lg: 'p-6',
+};
+---
+
+<div
+  class:list={[
+    'bg-card border border-border rounded-[var(--radius-card)]',
+    'shadow-[var(--shadow-card)] transition-all duration-200',
+    hover && 'card-lift cursor-default',
+    paddings[padding],
+    className,
+  ]}
+>
+  <slot />
+</div>

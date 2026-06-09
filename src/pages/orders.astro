@@ -1,0 +1,13 @@
+---
+import DashboardLayout from '../layouts/DashboardLayout.astro';
+import LiveOrdersSection from '../components/dashboard/LiveOrdersSection.astro';
+---
+
+<DashboardLayout title="Orders" currentPath="/orders">
+  <div class="mb-6 lg:mb-8">
+    <h1 class="text-dashboard-title font-bold text-text tracking-tight">Orders</h1>
+    <p class="text-body text-muted mt-1">Full order management and tracking</p>
+  </div>
+
+  <LiveOrdersSection />
+</DashboardLayout>

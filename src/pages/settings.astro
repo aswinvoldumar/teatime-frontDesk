@@ -1,0 +1,96 @@
+---
+import DashboardLayout from '../layouts/DashboardLayout.astro';
+import Card from '../components/shared/Card.astro';
+import ThemeToggle from '../components/dashboard/ThemeToggle.astro';
+import Icon from '../components/shared/Icon.astro';
+import { Bell, Moon, Volume2, Shield, Palette } from 'lucide-static';
+---
+
+<DashboardLayout title="Settings" currentPath="/settings">
+  <div class="mb-6 lg:mb-8">
+    <h1 class="text-dashboard-title font-bold text-text tracking-tight">Settings</h1>
+    <p class="text-body text-muted mt-1">Configure your front desk preferences</p>
+  </div>
+
+  <div class="max-w-2xl space-y-4">
+    <Card padding="lg">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+          <Icon svg={Palette} class="w-5 h-5 text-primary" />
+        </div>
+        <div>
+          <h2 class="text-body font-semibold text-text">Appearance</h2>
+          <p class="text-caption text-muted">Customize the dashboard theme</p>
+        </div>
+      </div>
+      <div class="flex items-center justify-between py-3 border-t border-border">
+        <div class="flex items-center gap-2">
+          <Icon svg={Moon} class="w-4 h-4 text-muted" />
+          <span class="text-body text-text">Dark Mode</span>
+        </div>
+        <ThemeToggle />
+      </div>
+    </Card>
+
+    <Card padding="lg">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+          <Icon svg={Bell} class="w-5 h-5 text-primary" />
+        </div>
+        <div>
+          <h2 class="text-body font-semibold text-text">Notifications</h2>
+          <p class="text-caption text-muted">Manage alert preferences</p>
+        </div>
+      </div>
+      <div class="space-y-3 border-t border-border pt-4">
+        {[
+          { label: 'New order alerts', desc: 'Notify when new orders arrive', default: true },
+          { label: 'Waiter requests', desc: 'Alert for service calls', default: true },
+          { label: 'Kitchen delays', desc: 'Warn when kitchen is behind', default: false },
+        ].map((item) => (
+          <label class="flex items-center justify-between gap-4 cursor-pointer group">
+            <div>
+              <p class="text-body text-text group-hover:text-primary transition-colors">{item.label}</p>
+              <p class="text-caption text-muted">{item.desc}</p>
+            </div>
+            <input
+              type="checkbox"
+              checked={item.default}
+              class="w-4 h-4 rounded border-border text-primary focus:ring-primary/30"
+            />
+          </label>
+        ))}
+      </div>
+    </Card>
+
+    <Card padding="lg">
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+          <Icon svg={Volume2} class="w-5 h-5 text-primary" />
+        </div>
+        <div>
+          <h2 class="text-body font-semibold text-text">Sound</h2>
+          <p class="text-caption text-muted">Audio notification settings</p>
+        </div>
+      </div>
+      <div class="border-t border-border pt-4">
+        <label class="flex items-center justify-between gap-4 cursor-pointer">
+          <span class="text-body text-text">Enable sound alerts</span>
+          <input type="checkbox" checked class="w-4 h-4 rounded border-border text-primary focus:ring-primary/30" />
+        </label>
+      </div>
+    </Card>
+
+    <Card padding="lg">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center">
+          <Icon svg={Shield} class="w-5 h-5 text-primary" />
+        </div>
+        <div>
+          <h2 class="text-body font-semibold text-text">Security</h2>
+          <p class="text-caption text-muted">Session and access controls</p>
+        </div>
+      </div>
+    </Card>
+  </div>
+</DashboardLayout>

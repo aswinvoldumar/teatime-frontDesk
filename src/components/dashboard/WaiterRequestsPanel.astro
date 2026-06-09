@@ -1,0 +1,120 @@
+---
+import RequestCard from './RequestCard.astro';
+import EmptyState from '../shared/EmptyState.astro';
+import { waiterRequests, pendingRequests } from '../../data/requests';
+
+const requestTabs = ['all', 'active', 'assigned', 'completed'] as const;
+---
+
+<aside
+  aria-label="Waiter requests"
+  class="lg:sticky lg:top-20 lg:self-start lg:max-h-[calc(100vh-6rem)]
+         bg-card border border-border rounded-[var(--radius-card)]
+         shadow-[var(--shadow-card)] flex flex-col overflow-hidden"
+  data-requests-panel
+>
+  <!-- Header -->
+  <div class="flex items-center justify-between px-4 py-4 border-b border-border shrink-0">
+    <div>
+      <div class="flex items-center gap-2">
+        <h2 class="text-section-title font-semibold text-text">Waiter Requests</h2>
+        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-caption font-semibold
+                     bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-400">
+          {pendingRequests.length} pending
+        </span>
+      </div>
+    </div>
+    <a
+      href="/requests"
+      class="text-caption text-primary hover:text-primary-hover font-medium transition-colors"
+    >
+      View all
+    </a>
+  </div>
+
+  <!-- Tabs -->
+  <div
+    role="tablist"
+    aria-label="Filter requests"
+    class="flex gap-1 px-4 py-3 border-b border-border shrink-0 overflow-x-auto scrollbar-thin"
+    data-request-tabs
+  >
+    {requestTabs.map((tab) => (
+      <button
+        type="button"
+        role="tab"
+        aria-selected={tab === 'all' ? 'true' : 'false'}
+        data-request-tab={tab}
+        class:list={[
+          'px-3 py-1 rounded-full text-caption font-medium whitespace-nowrap transition-all duration-200',
+          tab === 'all'
+            ? 'bg-primary text-white'
+            : 'text-muted hover:text-text hover:bg-background',
+        ]}
+      >
+        {tab.charAt(0).toUpperCase() + tab.slice(1)}
+      </button>
+    ))}
+  </div>
+
+  <!-- Request List -->
+  <div class="flex-1 overflow-y-auto scrollbar-thin p-3 space-y-2 min-h-[200px] lg:max-h-[600px]" data-requests-list>
+    {waiterRequests.map((request) => (
+      <RequestCard request={request} />
+    ))}
+  </div>
+
+  <div data-requests-empty class="hidden p-4">
+    <EmptyState
+      title="No requests"
+      description="All waiter requests have been handled."
+    />
+  </div>
+</aside>
+
+<script>
+  function initRequestFilters() {
+    const panel = document.querySelector('[data-requests-panel]');
+    if (!panel) return;
+
+    const tabs = panel.querySelectorAll<HTMLButtonElement>('[data-request-tab]');
+    const cards = panel.querySelectorAll<HTMLElement>('[data-request-card]');
+    const emptyState = panel.querySelector<HTMLElement>('[data-requests-empty]');
+    const list = panel.querySelector<HTMLElement>('[data-requests-list]');
+
+    let activeTab = 'all';
+
+    function filterRequests() {
+      let visible = 0;
+
+      cards.forEach((card) => {
+        const status = card.dataset.status ?? '';
+        const matches = activeTab === 'all' || status === activeTab;
+        card.style.display = matches ? '' : 'none';
+        if (matches) visible++;
+      });
+
+      if (list && emptyState) {
+        list.style.display = visible === 0 ? 'none' : '';
+        emptyState.classList.toggle('hidden', visible > 0);
+      }
+    }
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        activeTab = tab.dataset.requestTab ?? 'all';
+        tabs.forEach((t) => {
+          const isActive = t.dataset.requestTab === activeTab;
+          t.setAttribute('aria-selected', String(isActive));
+          t.classList.toggle('bg-primary', isActive);
+          t.classList.toggle('text-white', isActive);
+          t.classList.toggle('text-muted', !isActive);
+        });
+        filterRequests();
+      });
+    });
+  }
+
+  initRequestFilters();
+  document.addEventListener('astro:page-load', initRequestFilters);
+</script>
