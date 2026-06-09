@@ -4,6 +4,11 @@ import { Bell, Package, AlertCircle } from 'lucide-static';
 import { notifications } from '../../data/notifications';
 import { formatRelativeTime } from '../../utils/format';
 
+interface Props {
+  darkHeader?: boolean;
+}
+
+const { darkHeader = false } = Astro.props;
 const unreadCount = notifications.filter((n) => !n.read).length;
 
 const typeIcons: Record<string, string> = {
@@ -20,12 +25,15 @@ const typeIcons: Record<string, string> = {
     aria-label={`Notifications, ${unreadCount} unread`}
     aria-expanded="false"
     aria-haspopup="true"
-    class="relative w-9 h-9 rounded-lg flex items-center justify-center
-           bg-background border border-border
-           hover:bg-surface transition-all duration-200
-           focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+    class:list={[
+      'relative w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-200',
+      'focus-visible:outline-2 focus-visible:outline-offset-2',
+      darkHeader
+        ? 'header-btn focus-visible:outline-amber-500'
+        : 'bg-background border border-border hover:bg-surface focus-visible:outline-primary',
+    ]}
   >
-    <Icon svg={Bell} class="w-4 h-4 text-muted" />
+    <Icon svg={Bell} class:list={['w-4 h-4', darkHeader ? 'text-zinc-300' : 'text-muted']} />
     {unreadCount > 0 && (
       <span class="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 flex items-center justify-center
                    bg-red-500 text-white text-[10px] font-bold rounded-full leading-none">

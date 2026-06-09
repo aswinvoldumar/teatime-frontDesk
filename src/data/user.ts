@@ -1,7 +1,7 @@
 export const restaurant = {
   name: 'TeaTime Premium',
   tagline: 'Front Desk Operations',
-  logo: 'TT',
+  logoSrc: '../../assets/images/Logo.png',
 };
 
 export const currentUser = {

@@ -9,6 +9,8 @@ import {
 } from 'lucide-static';
 import { pendingRequests } from '../../data/requests';
 import { activeOrders } from '../../data/orders';
+import { restaurant } from '../../data/user';
+import logo from '../../assets/images/Logo.png';
 
 interface Props {
   currentPath: string;
@@ -84,15 +86,21 @@ function isActive(href: string) {
   aria-label="Mobile navigation"
   aria-hidden="true"
 >
-  <div class="flex items-center justify-between p-4 border-b border-border">
-    <span class="text-body font-semibold text-text">Navigation</span>
+  <div class="flex items-center justify-between p-4 border-b border-white/10 bg-black">
+    <img
+      src={logo.src}
+      alt={restaurant.name}
+      class="h-8 w-auto object-contain"
+      loading="lazy"
+      decoding="async"
+    />
     <button
       type="button"
       id="mobile-drawer-close"
       aria-label="Close navigation menu"
-      class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-background transition-colors"
+      class="w-8 h-8 rounded-lg flex items-center justify-center hover:bg-white/10 transition-colors"
     >
-      <Icon svg={X} class="w-4 h-4 text-muted" />
+      <Icon svg={X} class="w-4 h-4 text-zinc-400" />
     </button>
   </div>
 

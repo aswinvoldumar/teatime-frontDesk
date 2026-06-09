@@ -58,14 +58,9 @@ const isActive = request.status === 'active';
 
   <div class="flex flex-col gap-1.5 shrink-0 self-center">
     {isActive && (
-      <>
-        <Button size="sm" variant="primary" ariaLabel={`Acknowledge request for table ${request.tableNumber}`}>
-          Ack
-        </Button>
-        <Button size="sm" variant="secondary" ariaLabel={`Assign request for table ${request.tableNumber}`}>
-          Assign
-        </Button>
-      </>
+      <Button size="sm" variant="primary" ariaLabel={`Acknowledge request for table ${request.tableNumber}`}>
+        Ack
+      </Button>
     )}
     {request.status === 'assigned' && (
       <Button size="sm" variant="success" ariaLabel={`Complete request for table ${request.tableNumber}`}>

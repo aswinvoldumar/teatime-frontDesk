@@ -1,25 +1,39 @@
 ---
 import Icon from '../shared/Icon.astro';
 import { Sun, Moon } from 'lucide-static';
+
+interface Props {
+  darkHeader?: boolean;
+}
+
+const { darkHeader = false } = Astro.props;
 ---
 
 <button
   type="button"
   id="theme-toggle"
   aria-label="Toggle dark mode"
-  class="relative w-9 h-9 rounded-lg flex items-center justify-center
-         bg-background border border-border
-         hover:bg-surface transition-all duration-300
-         focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary
-         group"
+  class:list={[
+    'relative w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-300 group',
+    'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-500',
+    darkHeader
+      ? 'header-btn'
+      : 'bg-background border border-border hover:bg-surface',
+  ]}
 >
   <Icon
     svg={Sun}
-    class="w-4 h-4 text-muted absolute transition-all duration-300 rotate-0 scale-100 dark:-rotate-90 dark:scale-0"
+    class:list={[
+      'w-4 h-4 absolute transition-all duration-300 rotate-0 scale-100 dark:-rotate-90 dark:scale-0',
+      darkHeader ? 'text-zinc-300' : 'text-muted',
+    ]}
   />
   <Icon
     svg={Moon}
-    class="w-4 h-4 text-muted absolute transition-all duration-300 rotate-90 scale-0 dark:rotate-0 dark:scale-100"
+    class:list={[
+      'w-4 h-4 absolute transition-all duration-300 rotate-90 scale-0 dark:rotate-0 dark:scale-100',
+      darkHeader ? 'text-zinc-300' : 'text-muted',
+    ]}
   />
 </button>
 
