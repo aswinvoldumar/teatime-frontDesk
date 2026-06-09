@@ -26,19 +26,19 @@ const activeCount = orders.filter((o) => o.status !== 'served').length;
   </div>
 
   <!-- Controls -->
-  <div class="flex flex-col sm:flex-row gap-3 mb-4">
+  <div class="flex flex-col sm:flex-row sm:items-center gap-3 mb-4">
     <SearchBar
       placeholder="Search orders, tables, customers..."
       id="order-search"
       class="flex-1"
     />
 
-    <div class="relative shrink-0">
+    <div class="relative shrink-0 w-full sm:w-44">
       <label for="order-filter" class="sr-only">Filter by priority</label>
       <select
         id="order-filter"
         data-order-filter
-        class="appearance-none w-full sm:w-44 pl-3 pr-9 py-2.5 text-body
+        class="appearance-none w-full min-h-[42px] pl-3 pr-9 py-2.5 text-body leading-normal
                bg-input border border-border rounded-[var(--radius-button)] text-text
                focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary
                transition-all duration-200 cursor-pointer"
@@ -49,7 +49,9 @@ const activeCount = orders.filter((o) => o.status !== 'served').length;
         <option value="normal">Normal</option>
         <option value="low">Low</option>
       </select>
-      <Icon svg={ChevronDown} class="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted pointer-events-none" />
+      <span class="absolute right-3 inset-y-0 flex items-center pointer-events-none text-muted" aria-hidden="true">
+        <Icon svg={ChevronDown} class="w-4 h-4" />
+      </span>
     </div>
   </div>
 
