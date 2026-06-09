@@ -46,22 +46,13 @@ const isActive = request.status === 'active';
 
   <div class="flex items-center gap-1.5 shrink-0">
     {isActive && (
-      <>
-        <button
-          type="button"
-          class="btn-outline px-2.5 py-1 text-[11px] font-medium"
-          aria-label={`Assign request for table ${request.tableNumber}`}
-        >
-          Assign
-        </button>
-        <button
-          type="button"
-          class="btn-primary px-2.5 py-1 text-[11px] font-semibold"
-          aria-label={`Acknowledge request for table ${request.tableNumber}`}
-        >
-          Acknowledge
-        </button>
-      </>
+      <button
+        type="button"
+        class="btn-primary px-2.5 py-1 text-[11px] font-semibold"
+        aria-label={`Acknowledge request for table ${request.tableNumber}`}
+      >
+        Acknowledge
+      </button>
     )}
     {request.status === 'assigned' && (
       <button
