@@ -1,0 +1,107 @@
+---
+import WaiterRequestCard from './WaiterRequestCard.astro';
+import EmptyState from '../shared/EmptyState.astro';
+import { waiterRequests, pendingRequests } from '../../data/requests';
+
+const requestTabs = [
+  { id: 'all', label: 'All' },
+  { id: 'active', label: 'Active' },
+  { id: 'assigned', label: 'Acknowledged' },
+] as const;
+---
+
+<aside
+  aria-label="Waiter requests"
+  class="panel-card lg:sticky lg:top-20 lg:h-[calc(100vh-6rem)]
+         flex flex-col overflow-hidden min-h-[360px]"
+  data-requests-panel
+>
+  <div class="flex items-center justify-between px-4 py-3.5 border-b border-border shrink-0">
+    <div class="flex items-center gap-2 min-w-0">
+      <h2 class="text-sm font-semibold text-text">Waiter Requests</h2>
+      <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold
+                   bg-primary/10 text-primary shrink-0">
+        {pendingRequests.length} pending
+      </span>
+    </div>
+   
+  </div>
+
+  <div
+    role="tablist"
+    aria-label="Filter requests"
+    class="flex gap-1.5 px-4 py-2.5 border-b border-border shrink-0 overflow-x-auto scrollbar-thin"
+    data-request-tabs
+  >
+    {requestTabs.map((tab) => (
+      <button
+        type="button"
+        role="tab"
+        aria-selected={tab.id === 'all' ? 'true' : 'false'}
+        data-request-tab={tab.id}
+        class:list={[
+          'request-tab-pill',
+          tab.id === 'all' && 'request-tab-pill-active',
+        ]}
+      >
+        {tab.label}
+      </button>
+    ))}
+  </div>
+
+  <div class="flex-1 overflow-y-auto scrollbar-thin px-3 py-2.5 space-y-2 min-h-0" data-requests-list>
+    {waiterRequests.map((request) => (
+      <WaiterRequestCard request={request} />
+    ))}
+  </div>
+
+  <div data-requests-empty class="hidden p-4">
+    <EmptyState title="No requests" description="All waiter requests have been handled." />
+  </div>
+</aside>
+
+<script>
+  function initRequestFilters() {
+    const panel = document.querySelector('[data-requests-panel]');
+    if (!panel) return;
+
+    const tabs = panel.querySelectorAll<HTMLButtonElement>('[data-request-tab]');
+    const cards = panel.querySelectorAll<HTMLElement>('[data-request-card]');
+    const emptyState = panel.querySelector<HTMLElement>('[data-requests-empty]');
+    const list = panel.querySelector<HTMLElement>('[data-requests-list]');
+
+    let activeTab = 'all';
+
+    function filterRequests() {
+      let visible = 0;
+      cards.forEach((card) => {
+        const status = card.dataset.status ?? '';
+        const matches =
+          activeTab === 'all' ||
+          (activeTab === 'active' && status === 'active') ||
+          (activeTab === 'assigned' && status === 'assigned');
+        card.style.display = matches ? '' : 'none';
+        if (matches) visible++;
+      });
+
+      if (list && emptyState) {
+        list.style.display = visible === 0 ? 'none' : '';
+        emptyState.classList.toggle('hidden', visible > 0);
+      }
+    }
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        activeTab = tab.dataset.requestTab ?? 'all';
+        tabs.forEach((t) => {
+          t.classList.toggle('request-tab-pill-active', t.dataset.requestTab === activeTab);
+          t.setAttribute('aria-selected', String(t.dataset.requestTab === activeTab));
+        });
+        filterRequests();
+      });
+    });
+  }
+
+  initRequestFilters();
+  document.addEventListener('astro:page-load', initRequestFilters);
+</script>

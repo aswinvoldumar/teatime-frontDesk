@@ -2,21 +2,19 @@
 import DashboardLayout from '../layouts/DashboardLayout.astro';
 import KPISection from '../components/dashboard/KPISection.astro';
 import LiveOrdersSection from '../components/dashboard/LiveOrdersSection.astro';
-import WaiterRequestsPanel from '../components/dashboard/WaiterRequestsPanel.astro';
+import WaiterRequestPanel from '../components/dashboard/WaiterRequestPanel.astro';
 ---
 
-<DashboardLayout title="Dashboard" currentPath="/">
-  <!-- Page Header -->
-  <div class="mb-6 lg:mb-8">
-    <h1 class="text-dashboard-title font-bold text-text tracking-tight">Front Desk</h1>
-    <p class="text-body text-muted mt-1">Real-time overview of restaurant operations</p>
-  </div>
-
-  <KPISection />
-
-  <!-- Main Grid: 70/30 split on desktop -->
-  <div class="grid grid-cols-1 lg:grid-cols-[1fr_340px] xl:grid-cols-[1fr_380px] gap-6">
-    <LiveOrdersSection />
-    <WaiterRequestsPanel />
+<DashboardLayout title="Dashboard">
+  <div class="dashboard-grid">
+    <div class="dashboard-main min-w-0 space-y-4">
+      <div>
+        <h1 class="text-lg font-bold text-text tracking-tight">Front Desk</h1>
+        <p class="text-xs text-muted mt-0.5">Real-time overview of restaurant operations</p>
+      </div>
+      <KPISection />
+      <LiveOrdersSection />
+    </div>
+    <WaiterRequestPanel />
   </div>
 </DashboardLayout>

@@ -1,10 +1,10 @@
 ---
 import DashboardLayout from '../layouts/DashboardLayout.astro';
-import RequestCard from '../components/dashboard/RequestCard.astro';
+import WaiterRequestCard from '../components/dashboard/WaiterRequestCard.astro';
 import { waiterRequests } from '../data/requests';
 ---
 
-<DashboardLayout title="Requests" currentPath="/requests">
+<DashboardLayout title="Requests">
   <div class="mb-6 lg:mb-8">
     <h1 class="text-dashboard-title font-bold text-text tracking-tight">Waiter Requests</h1>
     <p class="text-body text-muted mt-1">Manage all service requests across the floor</p>
@@ -36,7 +36,7 @@ import { waiterRequests } from '../data/requests';
 
   <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3" data-requests-grid>
     {waiterRequests.map((request) => (
-      <RequestCard request={request} />
+      <WaiterRequestCard request={request} />
     ))}
   </div>
 </DashboardLayout>

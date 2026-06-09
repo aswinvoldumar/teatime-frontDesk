@@ -1,0 +1,68 @@
+---
+import Icon from '../shared/Icon.astro';
+import * as LucideIcons from 'lucide-static';
+import type { WaiterRequest } from '../../types';
+import {
+  formatRelativeTime,
+  requestTypeLabels,
+  requestTypeIcons,
+} from '../../utils/format';
+
+interface Props {
+  request: WaiterRequest;
+}
+
+const { request } = Astro.props;
+const iconSvg = (LucideIcons as Record<string, string>)[requestTypeIcons[request.type]] ?? LucideIcons.Bell;
+const isActive = request.status === 'active';
+---
+
+<article
+  class:list={[
+    'flex items-center gap-2.5 p-2.5 rounded-xl transition-all duration-200',
+    'border border-border',
+    isActive
+      ? 'request-active-glow'
+      : 'bg-background/50 hover:bg-background dark:bg-surface/30',
+  ]}
+  data-request-card
+  data-status={request.status}
+  data-type={request.type}
+>
+  <div class:list={[
+    'request-icon-wrap w-8 h-8 rounded-full flex items-center justify-center shrink-0',
+    !isActive && 'border border-border bg-card',
+  ]}>
+    <Icon svg={iconSvg} class:list={['w-3.5 h-3.5', isActive ? 'text-primary' : 'text-muted']} />
+  </div>
+
+  <div class="flex-1 min-w-0">
+    <p class="text-xs font-semibold text-text truncate">
+      Table {request.tableNumber} · {requestTypeLabels[request.type]}
+    </p>
+    <p class="text-[11px] text-muted mt-0.5">
+      Requested {formatRelativeTime(request.createdAt)}
+    </p>
+  </div>
+
+  <div class="flex items-center gap-1.5 shrink-0">
+    {isActive && (
+      <button
+        type="button"
+        class="btn-primary px-2.5 py-1 text-[11px] font-semibold"
+        aria-label={`Acknowledge request for table ${request.tableNumber}`}
+      >
+        Acknowledge
+      </button>
+    )}
+    {request.status === 'assigned' && (
+      <button
+        type="button"
+        class="btn-primary px-2.5 py-1 text-[11px] font-semibold !bg-green-600 hover:!bg-green-700"
+        aria-label={`Complete request for table ${request.tableNumber}`}
+      >
+        Done
+      </button>
+    )}
+  </div>
+</article>
