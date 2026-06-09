@@ -39,7 +39,7 @@ const activeCount = orders.filter((o) => o.status !== 'served').length;
         id="order-filter"
         data-order-filter
         class="appearance-none w-full sm:w-44 pl-3 pr-9 py-2.5 text-body
-               bg-background border border-border rounded-[var(--radius-button)] text-text
+               bg-input border border-border rounded-[var(--radius-button)] text-text
                focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary
                transition-all duration-200 cursor-pointer"
       >
@@ -57,7 +57,7 @@ const activeCount = orders.filter((o) => o.status !== 'served').length;
   <div
     role="tablist"
     aria-label="Filter orders by status"
-    class="flex gap-1 p-1 bg-background border border-border rounded-xl mb-5 overflow-x-auto scrollbar-thin"
+    class="flex gap-1 p-1 tab-track bg-background border border-border rounded-xl mb-5 overflow-x-auto scrollbar-thin"
     data-order-tabs
   >
     {statusTabs.map((tab) => (
@@ -69,7 +69,7 @@ const activeCount = orders.filter((o) => o.status !== 'served').length;
         class:list={[
           'px-3.5 py-1.5 rounded-lg text-caption font-medium whitespace-nowrap transition-all duration-200',
           tab === 'all'
-            ? 'bg-card text-text shadow-sm border border-border'
+            ? 'tab-active bg-card text-text shadow-sm border border-border'
             : 'text-muted hover:text-text',
         ]}
       >
@@ -144,6 +144,7 @@ const activeCount = orders.filter((o) => o.status !== 'served').length;
         tabs.forEach((t) => {
           const isActive = t.dataset.tab === activeTab;
           t.setAttribute('aria-selected', String(isActive));
+          t.classList.toggle('tab-active', isActive);
           t.classList.toggle('bg-card', isActive);
           t.classList.toggle('text-text', isActive);
           t.classList.toggle('shadow-sm', isActive);

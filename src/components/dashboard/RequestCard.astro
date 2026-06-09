@@ -24,16 +24,16 @@ const isActive = request.status === 'active';
   class:list={[
     'flex gap-3 p-3 rounded-xl border transition-all duration-200',
     isActive
-      ? 'bg-primary/5 border-primary/20 hover:bg-primary/10'
-      : 'bg-card border-border hover:bg-background',
+      ? 'request-active-glow bg-primary/5 border-primary/20 hover:bg-primary/10'
+      : 'bg-card border-border hover:bg-background dark:hover:bg-surface',
   ]}
   data-request-card
   data-status={request.status}
   data-type={request.type}
 >
   <div class:list={[
-    'w-9 h-9 rounded-lg flex items-center justify-center shrink-0',
-    isActive ? 'bg-primary/15' : 'bg-background border border-border',
+    'request-icon-wrap w-9 h-9 rounded-lg flex items-center justify-center shrink-0',
+    isActive ? 'bg-primary/15' : 'bg-background border border-border dark:bg-surface',
   ]}>
     <Icon svg={iconSvg} class:list={['w-4 h-4', isActive ? 'text-primary' : 'text-muted']} />
   </div>

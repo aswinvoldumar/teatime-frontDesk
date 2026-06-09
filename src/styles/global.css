@@ -14,6 +14,8 @@
   --color-primary: #f97316;
   --color-primary-hover: #ea580c;
 
+  --color-input: #f8fafc;
+
   --color-status-new: #f97316;
   --color-status-preparing: #f59e0b;
   --color-status-ready: #22c55e;
@@ -36,18 +38,25 @@
 }
 
 .dark {
-  --color-background: #09090b;
-  --color-surface: #111827;
-  --color-card: #18181b;
-  --color-border: #27272a;
-  --color-text: #fafafa;
-  --color-muted: #a1a1aa;
-  --color-primary: #fb923c;
-  --color-primary-hover: #f97316;
+  --color-background: #0a0a0a;
+  --color-surface: #121212;
+  --color-card: #161616;
+  --color-input: #121212;
+  --color-border: #262626;
+  --color-text: #ffffff;
+  --color-muted: #9ca3af;
+  --color-primary: #f97316;
+  --color-primary-hover: #fb923c;
+
+  --color-status-new: #f97316;
+  --color-status-preparing: #f59e0b;
+  --color-status-ready: #22c55e;
+  --color-status-served: #6b7280;
 
   --shadow-card: 0 0 0 1px rgb(255 255 255 / 0.04);
-  --shadow-card-hover: 0 0 0 1px rgb(255 255 255 / 0.06), 0 8px 24px rgb(0 0 0 / 0.4);
-  --shadow-premium: 0 0 0 1px rgb(255 255 255 / 0.05), 0 4px 16px rgb(0 0 0 / 0.3);
+  --shadow-card-hover: 0 0 0 1px rgb(249 115 22 / 0.2), 0 8px 32px rgb(0 0 0 / 0.55);
+  --shadow-premium: 0 0 0 1px rgb(255 255 255 / 0.05), 0 4px 24px rgb(0 0 0 / 0.45);
+  --shadow-glow-orange: 0 0 24px rgb(249 115 22 / 0.12);
 }
 
 @keyframes fade-in {
@@ -85,6 +94,13 @@
     @apply bg-background text-text min-h-screen;
   }
 
+  .dark body {
+    background-color: #0a0a0a;
+    background-image:
+      radial-gradient(ellipse 80% 60% at 50% -10%, rgb(249 115 22 / 0.05), transparent 55%),
+      radial-gradient(ellipse 50% 40% at 100% 0%, rgb(249 115 22 / 0.03), transparent 50%);
+  }
+
   *:focus-visible {
     @apply outline-2 outline-offset-2 outline-primary;
   }
@@ -118,6 +134,49 @@
   .card-lift:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-card-hover);
+  }
+
+  .dark-card-glow {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .dark .dark-card-glow::before {
+    content: '';
+    position: absolute;
+    top: -20%;
+    right: -10%;
+    width: 55%;
+    height: 70%;
+    background: radial-gradient(circle, rgb(249 115 22 / 0.1) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .dark .request-active-glow {
+    background: rgb(249 115 22 / 0.06);
+    border-color: rgb(249 115 22 / 0.25);
+    box-shadow: var(--shadow-glow-orange);
+  }
+
+  .dark .request-active-glow .request-icon-wrap {
+    background: rgb(249 115 22 / 0.15);
+    box-shadow: 0 0 16px rgb(249 115 22 / 0.2);
+  }
+
+  .dark [data-order-card][data-status='new'] {
+    border-color: rgb(249 115 22 / 0.35);
+    box-shadow: 0 0 0 1px rgb(249 115 22 / 0.1), var(--shadow-card);
+  }
+
+  .dark .tab-track {
+    background: #121212;
+    border-color: #262626;
+  }
+
+  .dark .tab-active {
+    background: #161616;
+    border-color: #262626;
+    color: #ffffff;
   }
 
   .skeleton-shimmer {
