@@ -1,7 +1,7 @@
 ---
 import Badge from '../shared/Badge.astro';
 import Icon from '../shared/Icon.astro';
-import { Clock } from 'lucide-static';
+import { Clock, Printer } from 'lucide-static';
 import type { Order } from '../../types';
 import {
   formatRelativeTime,
@@ -68,15 +68,26 @@ const showPriority = order.priority === 'high' || order.priority === 'urgent';
       <Icon svg={Clock} class="w-3 h-3 shrink-0" />
       <time datetime={order.createdAt.toISOString()}>{formatRelativeTime(order.createdAt)}</time>
     </div>
-    <button
-      type="button"
-      class:list={[
-        'btn-primary px-3 py-1.5 text-xs font-semibold',
-        actionButtonColors[order.status],
-      ]}
-      aria-label={`${orderActionLabels[order.status]} order ${order.id}`}
-    >
-      {orderActionLabels[order.status]}
-    </button>
+    <div class="flex items-center gap-2 shrink-0">
+      <button
+        type="button"
+        class="btn-print"
+        data-print-order
+        aria-label={`Print order ${order.id}`}
+      >
+        <Icon svg={Printer} class="w-3.5 h-3.5 text-primary" />
+        <span>Print</span>
+      </button>
+      <button
+        type="button"
+        class:list={[
+          'btn-primary px-3 py-1.5 text-xs font-semibold rounded-full',
+          actionButtonColors[order.status],
+        ]}
+        aria-label={`${orderActionLabels[order.status]} order ${order.id}`}
+      >
+        {orderActionLabels[order.status]}
+      </button>
+    </div>
   </div>
 </article>
