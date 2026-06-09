@@ -1,0 +1,85 @@
+---
+import Button from '../shared/Button.astro';
+import Icon from '../shared/Icon.astro';
+import * as LucideIcons from 'lucide-static';
+import type { WaiterRequest } from '../../types';
+import {
+  formatRelativeTime,
+  requestTypeLabels,
+  requestTypeIcons,
+} from '../../utils/format';
+
+interface Props {
+  request: WaiterRequest;
+}
+
+const { request } = Astro.props;
+const iconSvg = (LucideIcons as Record<string, string>)[requestTypeIcons[request.type]] ?? LucideIcons.Bell;
+const isActive = request.status === 'active';
+---
+
+<article
+  class:list={[
+    'flex items-center gap-2.5 p-2.5 rounded-xl border transition-all duration-200',
+    isActive
+      ? 'request-active-glow bg-primary/5 border-primary/20'
+      : 'bg-card/50 border-border hover:bg-background dark:hover:bg-surface/80',
+  ]}
+  data-request-card
+  data-status={request.status}
+  data-type={request.type}
+>
+  <div class:list={[
+    'request-icon-wrap w-8 h-8 rounded-lg flex items-center justify-center shrink-0',
+    isActive ? 'bg-primary/15' : 'bg-background border border-border dark:bg-surface',
+  ]}>
+    <Icon svg={iconSvg} class:list={['w-3.5 h-3.5', isActive ? 'text-primary' : 'text-muted']} />
+  </div>
+
+  <div class="flex-1 min-w-0">
+    <div class="flex items-center gap-1.5">
+      <span class="text-caption font-medium text-muted">Table {request.tableNumber}</span>
+      <span class="text-muted/40">·</span>
+      <span class="text-caption font-semibold text-text truncate">{requestTypeLabels[request.type]}</span>
+    </div>
+    <p class="text-[11px] text-muted mt-0.5">
+      Requested {formatRelativeTime(request.createdAt)}
+    </p>
+    {request.assignedTo && (
+      <p class="text-[11px] text-primary mt-0.5 truncate">Assigned to {request.assignedTo}</p>
+    )}
+  </div>
+
+  <div class="flex items-center gap-1 shrink-0">
+    {isActive && (
+      <>
+        <Button
+          size="sm"
+          variant="secondary"
+          class="!px-2 !py-1 !text-[11px] !min-w-0"
+          ariaLabel={`Assign request for table ${request.tableNumber}`}
+        >
+          Assign
+        </Button>
+        <Button
+          size="sm"
+          variant="primary"
+          class="!px-2 !py-1 !text-[11px] !min-w-0"
+          ariaLabel={`Acknowledge request for table ${request.tableNumber}`}
+        >
+          Ack
+        </Button>
+      </>
+    )}
+    {request.status === 'assigned' && (
+      <Button
+        size="sm"
+        variant="success"
+        class="!px-2 !py-1 !text-[11px]"
+        ariaLabel={`Complete request for table ${request.tableNumber}`}
+      >
+        Done
+      </Button>
+    )}
+  </div>
+</article>

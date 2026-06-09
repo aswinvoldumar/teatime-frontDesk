@@ -12,7 +12,7 @@ export const kpiData: KPI[] = [
   },
   {
     id: 'waiter-requests',
-    title: 'Pending Requests',
+    title: 'Pending Waiter Requests',
     value: 5,
     description: '3 high priority',
     trend: -8.2,

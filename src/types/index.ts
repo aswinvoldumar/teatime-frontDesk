@@ -61,10 +61,3 @@ export interface User {
   avatar: string;
   initials: string;
 }
-
-export interface NavItem {
-  label: string;
-  href: string;
-  icon: string;
-  badge?: number;
-}

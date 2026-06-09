@@ -1,0 +1,126 @@
+---
+import WaiterRequestCard from './WaiterRequestCard.astro';
+import EmptyState from '../shared/EmptyState.astro';
+import { waiterRequests, pendingRequests } from '../../data/requests';
+
+const requestTabs = [
+  { id: 'all', label: 'All' },
+  { id: 'active', label: 'Active' },
+  { id: 'assigned', label: 'Acknowledged' },
+] as const;
+---
+
+<aside
+  aria-label="Waiter requests"
+  class="waiter-panel lg:sticky lg:top-[4.25rem] lg:h-[calc(100vh-5.25rem)]
+         bg-card border border-border rounded-xl
+         shadow-[var(--shadow-card)] flex flex-col overflow-hidden min-h-[320px]"
+  data-requests-panel
+>
+  <div class="flex items-center justify-between px-3.5 py-3 border-b border-border shrink-0">
+    <div class="flex items-center gap-2 min-w-0">
+      <h2 class="text-body font-semibold text-text truncate">Waiter Requests</h2>
+      <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-[11px] font-semibold
+                   bg-primary/10 text-primary dark:bg-primary/15 shrink-0">
+        {pendingRequests.length} pending
+      </span>
+    </div>
+    <a
+      href="/requests"
+      class="text-[11px] text-primary hover:text-primary-hover font-medium transition-colors shrink-0"
+    >
+      View all
+    </a>
+  </div>
+
+  <div
+    role="tablist"
+    aria-label="Filter requests"
+    class="flex gap-1 px-3.5 py-2 border-b border-border shrink-0 overflow-x-auto scrollbar-thin"
+    data-request-tabs
+  >
+    {requestTabs.map((tab) => (
+      <button
+        type="button"
+        role="tab"
+        aria-selected={tab.id === 'all' ? 'true' : 'false'}
+        data-request-tab={tab.id}
+        class:list={[
+          'px-2.5 py-1 rounded-full text-[11px] font-medium whitespace-nowrap transition-all duration-200',
+          tab.id === 'all'
+            ? 'bg-primary text-white shadow-sm'
+            : 'text-muted hover:text-text hover:bg-background dark:hover:bg-surface',
+        ]}
+      >
+        {tab.label}
+      </button>
+    ))}
+  </div>
+
+  <div
+    class="flex-1 overflow-y-auto scrollbar-thin px-2.5 py-2 space-y-1.5 min-h-0"
+    data-requests-list
+  >
+    {waiterRequests.map((request) => (
+      <WaiterRequestCard request={request} />
+    ))}
+  </div>
+
+  <div data-requests-empty class="hidden p-4">
+    <EmptyState
+      title="No requests"
+      description="All waiter requests have been handled."
+    />
+  </div>
+</aside>
+
+<script>
+  function initRequestFilters() {
+    const panel = document.querySelector('[data-requests-panel]');
+    if (!panel) return;
+
+    const tabs = panel.querySelectorAll<HTMLButtonElement>('[data-request-tab]');
+    const cards = panel.querySelectorAll<HTMLElement>('[data-request-card]');
+    const emptyState = panel.querySelector<HTMLElement>('[data-requests-empty]');
+    const list = panel.querySelector<HTMLElement>('[data-requests-list]');
+
+    let activeTab = 'all';
+
+    function filterRequests() {
+      let visible = 0;
+
+      cards.forEach((card) => {
+        const status = card.dataset.status ?? '';
+        const matches =
+          activeTab === 'all' ||
+          (activeTab === 'active' && status === 'active') ||
+          (activeTab === 'assigned' && status === 'assigned');
+        card.style.display = matches ? '' : 'none';
+        if (matches) visible++;
+      });
+
+      if (list && emptyState) {
+        list.style.display = visible === 0 ? 'none' : '';
+        emptyState.classList.toggle('hidden', visible > 0);
+      }
+    }
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        activeTab = tab.dataset.requestTab ?? 'all';
+        tabs.forEach((t) => {
+          const isActive = t.dataset.requestTab === activeTab;
+          t.setAttribute('aria-selected', String(isActive));
+          t.classList.toggle('bg-primary', isActive);
+          t.classList.toggle('text-white', isActive);
+          t.classList.toggle('shadow-sm', isActive);
+          t.classList.toggle('text-muted', !isActive);
+        });
+        filterRequests();
+      });
+    });
+  }
+
+  initRequestFilters();
+  document.addEventListener('astro:page-load', initRequestFilters);
+</script>

@@ -1,9 +1,7 @@
 ---
 import SearchBar from './SearchBar.astro';
-import OrderCard from './OrderCard.astro';
+import LiveOrderCard from './LiveOrderCard.astro';
 import EmptyState from '../shared/EmptyState.astro';
-import Icon from '../shared/Icon.astro';
-import { ChevronDown } from 'lucide-static';
 import { orders } from '../../data/orders';
 
 const statusTabs = ['all', 'new', 'preparing', 'ready', 'served'] as const;
@@ -11,55 +9,31 @@ const activeCount = orders.filter((o) => o.status !== 'served').length;
 ---
 
 <section aria-label="Live orders" class="min-w-0" data-orders-section>
-  <!-- Section Header -->
-  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
-    <div>
-      <div class="flex items-center gap-2.5">
-        <h2 class="text-section-title font-semibold text-text">Live Orders</h2>
-        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-caption font-semibold
-                     bg-primary/10 text-primary">
+  <!-- Header: title left, search right -->
+  <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between mb-3">
+    <div class="min-w-0">
+      <div class="flex items-center gap-2">
+        <h2 class="text-body font-semibold text-text">Live Orders</h2>
+        <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-[11px] font-semibold
+                     bg-primary/10 text-primary dark:bg-primary/15">
           {activeCount} active
         </span>
       </div>
       <p class="text-caption text-muted mt-0.5">Monitor and manage incoming orders in real-time</p>
     </div>
-  </div>
-
-  <!-- Controls -->
-  <div class="flex flex-col sm:flex-row sm:items-center gap-3 mb-4">
     <SearchBar
       placeholder="Search orders, tables, customers..."
       id="order-search"
-      class="flex-1"
+      compact
+      class="w-full sm:w-64 sm:shrink-0"
     />
-
-    <div class="relative shrink-0 w-full sm:w-44">
-      <label for="order-filter" class="sr-only">Filter by priority</label>
-      <select
-        id="order-filter"
-        data-order-filter
-        class="appearance-none w-full min-h-[42px] pl-3 pr-9 py-2.5 text-body leading-normal
-               bg-input border border-border rounded-[var(--radius-button)] text-text
-               focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary
-               transition-all duration-200 cursor-pointer"
-      >
-        <option value="all">All Priorities</option>
-        <option value="urgent">Urgent</option>
-        <option value="high">High</option>
-        <option value="normal">Normal</option>
-        <option value="low">Low</option>
-      </select>
-      <span class="absolute right-3 inset-y-0 flex items-center pointer-events-none text-muted" aria-hidden="true">
-        <Icon svg={ChevronDown} class="w-4 h-4" />
-      </span>
-    </div>
   </div>
 
   <!-- Status Tabs -->
   <div
     role="tablist"
     aria-label="Filter orders by status"
-    class="flex gap-1 p-1 tab-track bg-background border border-border rounded-xl mb-5 overflow-x-auto scrollbar-thin"
+    class="flex gap-1 p-0.5 tab-track bg-background border border-border rounded-lg mb-3 overflow-x-auto scrollbar-thin"
     data-order-tabs
   >
     {statusTabs.map((tab) => (
@@ -69,7 +43,7 @@ const activeCount = orders.filter((o) => o.status !== 'served').length;
         aria-selected={tab === 'all' ? 'true' : 'false'}
         data-tab={tab}
         class:list={[
-          'px-3.5 py-1.5 rounded-lg text-caption font-medium whitespace-nowrap transition-all duration-200',
+          'px-3 py-1 rounded-md text-caption font-medium whitespace-nowrap transition-all duration-200',
           tab === 'all'
             ? 'tab-active bg-card text-text shadow-sm border border-border'
             : 'text-muted hover:text-text',
@@ -82,11 +56,11 @@ const activeCount = orders.filter((o) => o.status !== 'served').length;
 
   <!-- Orders Grid -->
   <div
-    class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"
+    class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3"
     data-orders-grid
   >
     {orders.map((order) => (
-      <OrderCard order={order} />
+      <LiveOrderCard order={order} />
     ))}
   </div>
 
@@ -104,7 +78,6 @@ const activeCount = orders.filter((o) => o.status !== 'served').length;
     if (!section) return;
 
     const searchInput = section.querySelector<HTMLInputElement>('[data-search-input]');
-    const filterSelect = section.querySelector<HTMLSelectElement>('[data-order-filter]');
     const tabs = section.querySelectorAll<HTMLButtonElement>('[data-tab]');
     const cards = section.querySelectorAll<HTMLElement>('[data-order-card]');
     const emptyState = section.querySelector<HTMLElement>('[data-orders-empty]');
@@ -114,19 +87,16 @@ const activeCount = orders.filter((o) => o.status !== 'served').length;
 
     function filterOrders() {
       const query = searchInput?.value.toLowerCase() ?? '';
-      const priority = filterSelect?.value ?? 'all';
       let visible = 0;
 
       cards.forEach((card) => {
         const status = card.dataset.status ?? '';
-        const cardPriority = card.dataset.priority ?? '';
         const searchText = card.dataset.search ?? '';
 
         const matchesTab = activeTab === 'all' || status === activeTab;
-        const matchesPriority = priority === 'all' || cardPriority === priority;
         const matchesSearch = !query || searchText.includes(query);
 
-        const show = matchesTab && matchesPriority && matchesSearch;
+        const show = matchesTab && matchesSearch;
         card.style.display = show ? '' : 'none';
         if (show) visible++;
       });
@@ -138,7 +108,6 @@ const activeCount = orders.filter((o) => o.status !== 'served').length;
     }
 
     searchInput?.addEventListener('input', filterOrders);
-    filterSelect?.addEventListener('change', filterOrders);
 
     tabs.forEach((tab) => {
       tab.addEventListener('click', () => {

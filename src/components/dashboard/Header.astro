@@ -11,20 +11,8 @@ const today = formatDate(new Date());
 <header class="sticky top-0 z-40 header-bar">
   <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex items-center justify-between h-16 gap-4">
-      <!-- Left: Mobile menu + Logo -->
+      <!-- Left: Logo -->
       <div class="flex items-center gap-3 min-w-0">
-        <button
-          type="button"
-          id="mobile-menu-toggle"
-          aria-label="Open navigation menu"
-          aria-expanded="false"
-          class="lg:hidden w-9 h-9 rounded-lg flex items-center justify-center header-btn"
-        >
-          <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
-
         <a href="/" class="flex items-center gap-3 min-w-0 shrink-0" aria-label={restaurant.name}>
           <img
             src={logo.src}

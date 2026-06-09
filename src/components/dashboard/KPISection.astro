@@ -1,12 +1,12 @@
 ---
-import KPICard from './KPICard.astro';
+import KPIStatCard from './KPIStatCard.astro';
 import { kpiData } from '../../data/kpi';
 ---
 
-<section aria-label="Key performance indicators" class="mb-6 lg:mb-8">
-  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+<section aria-label="Key performance indicators" class="mb-4">
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
     {kpiData.map((kpi) => (
-      <KPICard kpi={kpi} />
+      <KPIStatCard kpi={kpi} />
     ))}
   </div>
 </section>
