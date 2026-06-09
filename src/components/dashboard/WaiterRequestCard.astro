@@ -20,9 +20,10 @@ const isActive = request.status === 'active';
 <article
   class:list={[
     'flex items-center gap-2.5 p-2.5 rounded-xl transition-all duration-200',
+    'border border-border',
     isActive
       ? 'request-active-glow'
-      : 'border border-border bg-background/50 hover:bg-background dark:bg-surface/30',
+      : 'bg-background/50 hover:bg-background dark:bg-surface/30',
   ]}
   data-request-card
   data-status={request.status}
