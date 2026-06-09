@@ -5,8 +5,8 @@ export const restaurant = {
 };
 
 export const currentUser = {
-  name: 'Aisha Mwangi',
-  role: 'Floor Manager',
+  name: 'John Doe',
+  role: 'Manager',
   avatar: '',
   initials: 'AM',
 };
